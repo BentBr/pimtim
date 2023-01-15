@@ -2,6 +2,10 @@ parameters:
     secret: '%env(APP_SECRET)%'
     app_domain: '%env(APP_DOMAIN)%'
 
+    pimtim_data_objects_path: '%env(resolve:PIMTIM_DATA_OBJECTS_PATH)%'
+    pimtim_users_path: '%env(resolve:PIMTIM_USERS_PATH)%'
+    pimtim_tracking_data_path: '%env(resolve:PIMTIM_TRACKING_DATA_PATH)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
