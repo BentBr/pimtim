@@ -19,6 +19,8 @@ use Pimcore\Bundle\BundleGeneratorBundle\Generator\Generator;
 use Pimcore\Bundle\BundleGeneratorBundle\PimcoreBundleGeneratorBundle;
 use Pimcore\HttpKernel\BundleCollection\BundleCollection;
 use Pimcore\Kernel as PimcoreKernel;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use LogicException;
 
 class Kernel extends PimcoreKernel
 {
@@ -28,12 +30,18 @@ class Kernel extends PimcoreKernel
      *
      * @param BundleCollection $collection
      */
-    public function registerBundlesToCollection(BundleCollection $collection)
+    public function registerBundlesToCollection(BundleCollection $collection): void
     {
         if (class_exists('\\AppBundle\\AppBundle')) {
-            $collection->addBundle(new \AppBundle\AppBundle);
+            if (! ($appBundle = new \AppBundle\AppBundle) instanceof BundleInterface) {
+                throw new LogicException('We must have a proper bundle here!');
+            }
+            $collection->addBundle($appBundle);
         }
 
-        $collection->addBundle(new PimcoreBundleGeneratorBundle());
+        if (! ($bundleGenerator = new PimcoreBundleGeneratorBundle) instanceof BundleInterface) {
+            throw new LogicException('We must have a proper bundle here!');
+        }
+        $collection->addBundle($bundleGenerator);
     }
 }
