@@ -3,6 +3,7 @@
 /**
  * Inheritance: no
  * Variants: no
+ * Defines all tracks of one user per one defined month
  *
  * Fields Summary:
  * - month [numeric]
@@ -17,9 +18,9 @@ return Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'dao' => NULL,
    'id' => '3',
    'name' => 'PimTimMonth',
-   'description' => '',
+   'description' => 'Defines all tracks of one user per one defined month',
    'creationDate' => 0,
-   'modificationDate' => 1673816685,
+   'modificationDate' => 1673818032,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
