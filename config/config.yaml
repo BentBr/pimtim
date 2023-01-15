@@ -3,6 +3,11 @@ imports:
 
 
 pimcore:
+    models:
+        class_overrides:
+            'Pimcore\Model\DataObject\PimTimYear': 'App\Model\DataObject\PimTimYear'
+            'Pimcore\Model\DataObject\PimTimMonth': 'App\Model\DataObject\PimTimMonth'
+            'Pimcore\Model\DataObject\PimTimUser': 'App\Model\DataObject\PimTimUser'
 
 # IMPORTANT Notice!
 # Following there are only some examples listed, for a full list of possible options, please run the following command:
@@ -20,19 +25,6 @@ pimcore:
 #### FEATURE FLAGS
 #    flags:
 #        zend_date: true
-
-#### CLASS OVERRIDES EXAMPLES
-#    models:
-#        class_overrides:
-#            'Pimcore\Model\DataObject\News': 'App\Model\DataObject\News'
-#            'Pimcore\Model\DataObject\News\Listing': 'App\Model\DataObject\News\Listing'
-#            'Pimcore\Model\DataObject\Folder': 'App\Model\DataObject\Folder'
-#            'Pimcore\Model\Asset\Folder': 'App\Model\Asset\Folder'
-#            'Pimcore\Model\Asset\Image': 'App\Model\Asset\Image'
-#            'Pimcore\Model\Document\Page': 'App\Model\Document\Page'
-#            'Pimcore\Model\Document\Link': 'App\Model\Document\Link'
-#            'Pimcore\Model\Document\Listing': 'App\Model\Document\Listing'
-
 
 #### CUSTOM DOCUMENT EDITABLES
 #    documents:
