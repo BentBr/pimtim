@@ -96,7 +96,7 @@ x-mutagen:
             ignore:
                 vcs: true
 
-        pimcore: &x-pimcore
+        pimcore:
             alpha: "./"
             beta: "volume://pimcore"
             mode: "two-way-resolved"
@@ -111,16 +111,6 @@ x-mutagen:
                     - "/.git"
                     - "/.docker"
                     - "/.run"
-                    - "/.cypress"
-                    - "/var/*"
-                    - "!/var/classes"
-                    - "!/var/config"
-                    - "!/var/uploads"
-                    - "!/var/sessions"
-                    - "!/var/log"
                     - "/cache"
                     - "/node_modules"
                     - "/etc/*"
-                    - "!/etc/import"
-                    - "!/etc/schema"
-                    - "/postman"
