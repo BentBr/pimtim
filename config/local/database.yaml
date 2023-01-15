@@ -1,0 +1,13 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                host: '%env(resolve:MYSQL_HOST)%'
+                port: '%env(resolve:MYSQL_PORT)%'
+                user: '%env(resolve:MYSQL_USER)%'
+                password: '%env(resolve:MYSQL_PASSWORD)%'
+                dbname: '%env(resolve:MYSQL_DATABASE)%'
+                mapping_types:
+                    enum: string
+                    bit: boolean
+                server_version: '%env(resolve:MYSQL_VERSION)%'

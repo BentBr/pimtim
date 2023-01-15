@@ -1,0 +1,126 @@
+services:
+
+    redis:
+        image: redis:alpine
+        labels:
+            - "traefik.enable=false"
+        networks:
+            - internal
+        command: [ redis-server, --maxmemory 128mb, --maxmemory-policy volatile-lru, --save "" ]
+
+    db:
+        image: mariadb:10.7
+        working_dir: /application
+        command: [ mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --innodb-large-prefix=1, --innodb-file-per-table=1 --max-allowed-packet=67108864 ]
+        volumes:
+            - db:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        env_file:
+            -   .env.local
+        networks:
+            - internal
+        labels:
+            - "traefik.enable=false"
+
+    nginx:
+        image: nginx:stable-alpine
+        working_dir: /var/www/html
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=traefik_network"
+            - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`${PROJECT_NAME}.lntc`)"
+        depends_on:
+            - pimcore
+            - pimcore-debug
+        volumes:
+            - .:/var/www/html:ro
+            - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+        networks:
+            - internal
+            - traefik_network
+
+    pimcore: &pimcore
+        user: "${USER_ID}:${GROUP_ID}"
+        labels:
+            - "traefik.enable=false"
+        build:
+            context: .
+            dockerfile: .docker/Dockerfile.pimcore
+        working_dir: /var/www/html/
+        environment: &pimcore-environment
+            APACHE_DOCUMENT_ROOT: /var/www/html/public
+            COMPOSER_HOME: /var/www/html
+        env_file:
+            - .env.local
+        volumes:
+            - pimcore:/var/www/html:cached
+        depends_on:
+            - db
+            - redis
+        networks:
+            - internal
+
+    pimcore-debug:
+        <<: *pimcore
+        build:
+            context: .
+            dockerfile: .docker/Dockerfile.pimcore-debug
+        environment:
+            <<: *pimcore-environment
+            PHP_IDE_CONFIG: "serverName=${PROJECT_NAME}.lntc"
+
+    supervisord:
+        image: pimcore/pimcore:php8.1-supervisord-latest
+        depends_on:
+            - db
+        volumes:
+            - .:/var/www/html
+            - ./.docker/supervisord.conf:/etc/supervisor/conf.d/pimcore.conf:ro
+
+volumes:
+    db:
+    pimcore:
+
+networks:
+    traefik_network:
+        external: true
+    internal:
+
+x-mutagen:
+    sync:
+
+        defaults:
+            symlink:
+                mode: "posix-raw"
+            ignore:
+                vcs: true
+
+        pimcore: &x-pimcore
+            alpha: "./"
+            beta: "volume://pimcore"
+            mode: "two-way-resolved"
+            permissions:
+                defaultOwner: "id:${USER_ID}"
+                defaultGroup: "id:${GROUP_ID}"
+                defaultFileMode: 0644
+                defaultDirectoryMode: 0755
+            ignore:
+                paths:
+                    - "/symfony-cache"
+                    - "/.git"
+                    - "/.docker"
+                    - "/.run"
+                    - "/.cypress"
+                    - "/var/*"
+                    - "!/var/classes"
+                    - "!/var/config"
+                    - "!/var/uploads"
+                    - "!/var/sessions"
+                    - "!/var/log"
+                    - "/cache"
+                    - "/node_modules"
+                    - "/etc/*"
+                    - "!/etc/import"
+                    - "!/etc/schema"
+                    - "/postman"

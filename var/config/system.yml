@@ -1,0 +1,39 @@
+pimcore:
+    general:
+        domain: '%env(resolve:APP_DOMAIN)%'
+        redirect_to_maindomain: false
+        language: en
+        valid_languages: 'en,de'
+        fallback_languages:
+            en: ''
+            de: ''
+        default_language: en
+        debug_admin_translations: false
+    documents:
+        versions:
+            days: null
+            steps: '%env(int:DOCUMENTS_VERSIONING)%'
+        error_pages:
+            default: ''
+            localized:
+                en: ''
+    objects:
+        versions:
+            days: null
+            steps: '%env(int:OBJECTS_VERSIONING)%'
+    assets:
+        versions:
+            days: null
+            steps: '%env(int:ASSETS_VERSIONING)%'
+        hide_edit_image: false
+        disable_tree_preview: '%env(bool:DISABLE_TREE_VIEW)%'
+    email:
+        debug:
+            email_addresses: '%env(resolve:DEBUG_EMAIL)%'
+pimcore_admin:
+    branding:
+        login_screen_invert_colors: false
+        color_login_screen: ''
+        color_admin_interface: ''
+        color_admin_interface_background: ''
+        login_screen_custom_image: ''
